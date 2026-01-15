@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Information</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 100px; resize: vertical; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .progress { text-align: center; margin-bottom: 20px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress">Step 1 of 4: Company Information</div>
+        <h2>Company Details</h2>
+        <form id="companyInfoForm">
+            <div class="form-group">
+                <label for="industry">Industry</label>
+                <select id="industry" required>
+                    <option value="">Select Industry</option>
+                    <option value="technology">Technology</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="finance">Finance</option>
+                    <option value="retail">Retail</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="companySize">Company Size</label>
+                <select id="companySize" required>
+                    <option value="">Select Size</option>
+                    <option value="1-10">1-10 employees</option>
+                    <option value="11-50">11-50 employees</option>
+                    <option value="51-200">51-200 employees</option>
+                    <option value="201-500">201-500 employees</option>
+                    <option value="500+">500+ employees</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Company Description</label>
+                <textarea id="description" placeholder="Brief description of your company" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="website">Website (Optional)</label>
+                <input type="url" id="website" placeholder="https://www.example.com">
+            </div>
+            <button type="submit">Next: Founding Information</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('companyInfoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = JSON.parse(localStorage.getItem('companyData') || '{}');
+            data.industry = document.getElementById('industry').value;
+            data.companySize = document.getElementById('companySize').value;
+            data.description = document.getElementById('description').value;
+            data.website = document.getElementById('website').value;
+            localStorage.setItem('companyData', JSON.stringify(data));
+            window.location.href = 'founding.html';
+        });
+    </script>
+</body>
+</html>

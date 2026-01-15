@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founding Information</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .progress { text-align: center; margin-bottom: 20px; color: #666; }
+        .founder-section { border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress">Step 2 of 4: Founding Information</div>
+        <h2>Founding Details</h2>
+        <form id="foundingForm">
+            <div class="form-group">
+                <label for="foundedDate">Founded Date</label>
+                <input type="date" id="foundedDate" required>
+            </div>
+            <div class="form-group">
+                <label for="registrationNumber">Registration Number</label>
+                <input type="text" id="registrationNumber" placeholder="Company registration number" required>
+            </div>
+            <div class="form-group">
+                <label for="headquarters">Headquarters Location</label>
+                <input type="text" id="headquarters" placeholder="City, Country" required>
+            </div>
+            <div class="founder-section">
+                <h3>Founder Information</h3>
+                <div class="form-group">
+                    <label for="founderName">Founder Name</label>
+                    <input type="text" id="founderName" placeholder="Full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="founderRole">Role</label>
+                    <select id="founderRole" required>
+                        <option value="">Select Role</option>
+                        <option value="ceo">CEO</option>
+                        <option value="cto">CTO</option>
+                        <option value="cfo">CFO</option>
+                        <option value="founder">Founder</option>
+                        <option value="co-founder">Co-Founder</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Next: Social Media</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('foundingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = JSON.parse(localStorage.getItem('companyData') || '{}');
+            data.foundedDate = document.getElementById('foundedDate').value;
+            data.registrationNumber = document.getElementById('registrationNumber').value;
+            data.headquarters = document.getElementById('headquarters').value;
+            data.founderName = document.getElementById('founderName').value;
+            data.founderRole = document.getElementById('founderRole').value;
+            localStorage.setItem('companyData', JSON.stringify(data));
+            window.location.href = 'Social_media_info.html';
+        });
+    </script>
+</body>
+</html>

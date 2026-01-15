@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Career Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+        
+        /* Layout Styling */
+        .header { background: #2c3e50; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .sidebar { position: fixed; left: 0; top: 70px; width: 250px; height: calc(100vh - 70px); background: white; border-right: 1px solid #ddd; overflow-y: auto; }
+        .sidebar a { display: block; padding: 12px 20px; text-decoration: none; color: #555; border-bottom: 1px solid #f0f0f0; transition: 0.3s; cursor: pointer; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; color: white; }
+        
+        .main-content { margin-left: 250px; padding: 2rem; margin-top: 70px; }
+        
+        /* Stats Styling */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 2rem; }
+        .stat-card { padding: 2rem; border-radius: 8px; text-align: center; color: white; background: #5d69be; }
+        .stat-card.green { background: #27ae60; }
+        .stat-card.blue { background: #3498db; }
+        .stat-card.orange { background: #f39c12; }
+        .stat-number { font-size: 2.5rem; font-weight: bold; }
+
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .section { display: none; }
+
+        /* Tables & Badges */
+        .table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table th, .table td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; }
+        .btn-primary { background: #3498db; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.5rem; font-weight: bold;">🎓 Student Dashboard</div>
+        <div>
+            <span id="welcomeName">Loading...</span>
+            <button onclick="logout()" style="margin-left:20px; background:#e74c3c; color:white; border:none; padding:5px 15px; border-radius:4px; cursor:pointer;">Logout</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <a class="active" onclick="showSection('overview')">📊 Overview</a>
+        <a onclick="showSection('applications')">📝 My Applications</a>
+        <a onclick="window.location.href='job-portal.html'">🔍 Browse Jobs</a>
+        <a onclick="showSection('resume')">📄 My Resume</a>
+        <a onclick="showSection('skills')">🧠 Skills & Certs</a>
+        <a onclick="showSection('profile')">👤 Profile Settings</a>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="overview" class="section" style="display: block;">
+            <div class="stats-grid">
+                <div class="stat-card blue"><div class="stat-number" id="countApplied">0</div><div>Applied Jobs</div></div>
+                <div class="stat-card green"><div class="stat-number" id="countApproved">0</div><div>Approved</div></div>
+                <div class="stat-card orange"><div class="stat-number" id="countPending">0</div><div>Pending</div></div>
+                <div class="stat-card"><div class="stat-number">85%</div><div>Profile Strength</div></div>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div style="margin-top:15px;">
+                    <button class="btn btn-primary" onclick="window.location.href='job-portal.html'">Search New Jobs</button>
+                    <button class="btn btn-primary" style="background:#8e44ad" onclick="showSection('resume')">Update Resume</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Recent Notifications</h3>
+                <p id="recentUpdate" style="margin-top:10px; color:#666;">Check "My Applications" for status updates from companies.</p>
+            </div>
+        </div>
+
+        <div id="applications" class="section">
+            <div class="card">
+                <h3>📝 Track My Applications</h3>
+                <div id="appsList"></div>
+            </div>
+        </div>
+
+        <div id="resume" class="section">
+            <div class="card">
+                <h3>📄 Resume Builder</h3>
+                <p>Upload your latest CV to increase your chances by 40%.</p>
+                <input type="file" style="margin-top:20px;">
+            </div>
+        </div>
+
+        <div id="skills" class="section">
+            <div class="card">
+                <h3>🧠 Skills & Certifications</h3>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <span style="background:#eee; padding:5px 10px; border-radius:4px;">HTML/CSS</span>
+                    <span style="background:#eee; padding:5px 10px; border-radius:4px;">JavaScript</span>
+                    <span style="background:#eee; padding:5px 10px; border-radius:4px;">Python</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile" class="section">
+            <div class="card">
+                <h3>👤 Personal Information</h3>
+                <p style="margin-bottom:10px;">Keep your contact details updated for HR communication.</p>
+                <input type="text" id="profName" placeholder="Full Name">
+                <input type="email" id="profEmail" placeholder="Email Address" disabled>
+                <button class="btn btn-primary" style="margin-top:10px;">Update Profile</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const studentEmail = currentUser.email;
+
+        function init() {
+            if (!studentEmail) {
+                window.location.href = '../index.html';
+                return;
+            }
+            document.getElementById('welcomeName').innerText = `Welcome, ${currentUser.name}!`;
+            document.getElementById('profName').value = currentUser.name || '';
+            document.getElementById('profEmail').value = currentUser.email || '';
+            updateStats();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            
+            // Sidebar active class
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if(id === 'applications') renderApplications();
+            if(id === 'overview') updateStats();
+        }
+
+        function renderApplications() {
+            const container = document.getElementById('appsList');
+            const allApps = JSON.parse(localStorage.getItem('globalApplications') || '[]');
+            const myApps = allApps.filter(app => app.studentEmail === studentEmail);
+
+            if (myApps.length === 0) {
+                container.innerHTML = "<p>You haven't applied for any jobs yet.</p>";
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr style="background:#f8f9fa;">
+                            <th>Job Details</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${myApps.map(app => `
+                            <tr>
+                                <td>
+                                    <strong>${app.jobTitle}</strong><br>
+                                    <small style="color:#777;">${app.company || 'Company'}</small>
+                                </td>
+                                <td>${app.appliedDate || 'Recent'}</td>
+                                <td>
+                                    <span class="status-badge status-${app.status.toLowerCase()}">
+                                        ${app.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function updateStats() {
+            const allApps = JSON.parse(localStorage.getItem('globalApplications') || '[]');
+            const myApps = allApps.filter(app => app.studentEmail === studentEmail);
+            
+            document.getElementById('countApplied').innerText = myApps.length;
+            document.getElementById('countApproved').innerText = myApps.filter(a => a.status === 'Approved').length;
+            document.getElementById('countPending').innerText = myApps.filter(a => a.status === 'Pending').length;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = '../index.html';
+        }
+
+        init();
+    </script>
+</body>
+</html>

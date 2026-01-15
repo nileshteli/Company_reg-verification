@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Portal</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        .job-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn-apply { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>🚀 Live Job Openings</h2>
+    <div id="portalList"></div>
+
+    <script>
+        function loadPortal() {
+            const jobs = JSON.parse(localStorage.getItem('allJobs') || '[]');
+            const container = document.getElementById('portalList');
+            
+            if(jobs.length === 0) {
+                container.innerHTML = "<p>No jobs available yet. Check back later!</p>";
+                return;
+            }
+
+            container.innerHTML = jobs.map(j => `
+                <div class="job-card">
+                    <h3>${j.title}</h3>
+                    <p><strong>Company:</strong> ${j.company}</p>
+                    <p><strong>Location:</strong> ${j.location} | <strong>Salary:</strong> ${j.salary}</p>
+                    <p>${j.description}</p>
+                    <button class="btn-apply" onclick="applyNow(${j.id})">Apply Now</button>
+                </div>
+            `).join('');
+        }
+
+        function applyNow(jobId) {
+            const jobs = JSON.parse(localStorage.getItem('allJobs') || '[]');
+            const job = jobs.find(j => j.id === jobId);
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+            if(!user.email) {
+                alert("Please log in as a student first!");
+                return;
+            }
+
+            const application = {
+                id: Date.now(),
+                jobId: job.id,
+                jobTitle: job.title,
+                companyEmail: job.companyEmail, // This is the parameter that was missing
+                studentName: user.name || "Student",
+                studentEmail: user.email,
+                status: 'Pending'
+            };
+
+            const allApps = JSON.parse(localStorage.getItem('globalApplications') || '[]');
+            allApps.push(application);
+            localStorage.setItem('globalApplications', JSON.stringify(allApps));
+
+            alert(`Application sent to ${job.company}!`);
+        }
+
+        loadPortal();
+    </script>
+</body>
+</html>
