@@ -24,5 +24,15 @@
   "rewrites": [
     { "source": "/(.*)", 
     "destination": "/public/index.html" }
+  ],
+  
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.js" }
+  ],
+  "routes": [
+    { "src": "/public/index.html", "dest": "/public/index.html" },
+    { "handle": "filesystem" }
   ]
+
 }
